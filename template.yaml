@@ -20,9 +20,20 @@ Resources:
     Type: AWS::AppRunner::Service
     Properties:
       SourceConfiguration:
+        AuthenticationConfiguration:
+          ConnectionArn: arn:aws:apprunner:ap-northeast-1:384447982274:connection/github3/ba068730afdf44deabe5c266fa06ea06
         AutoDeploymentsEnabled: true
         CodeRepository:
+          CodeConfiguration:
+            ConfigurationSource: REPOSITORY
+            CodeConfigurationValues:
+              RuntimeEnvironmentSecrets:
+              - Name: OPENAI_API_KEY
+                Value: !Ref Secrets
           RepositoryUrl: https://github.com/hsmtkk/potential-fiesta
+          SourceCodeVersion:
+            Type: BRANCH
+            Value: main
           SourceDirectory: front
 
 # Resources:
