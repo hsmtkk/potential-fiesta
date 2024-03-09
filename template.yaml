@@ -16,6 +16,19 @@ Resources:
       - AttributeName: id
         KeyType: HASH
 
+  AppRunnerIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: tasks.apprunner.amazonaws.com
+          Action: sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/SecretsManagerReadWrite
+
   AppRunner:
     Type: AWS::AppRunner::Service
     Properties:
@@ -25,17 +38,22 @@ Resources:
         AutoDeploymentsEnabled: true
         CodeRepository:
           CodeConfiguration:
-            ConfigurationSource: REPOSITORY
+            ConfigurationSource: API
             CodeConfigurationValues:
+              BuildCommand: "npm ci && npx next build"
+              Port: 8080
               Runtime: NODEJS_18
               RuntimeEnvironmentSecrets:
               - Name: OPENAI_API_KEY
                 Value: !Ref Secrets
+              StartCommand: "npx next start -p 8080"
           RepositoryUrl: https://github.com/hsmtkk/potential-fiesta
           SourceCodeVersion:
             Type: BRANCH
             Value: main
           SourceDirectory: front
+      InstanceConfiguration:
+        InstanceRoleArn: !GetAtt AppRunnerIAMRole.Arn
 
 # Resources:
 #   HelloWorldFunction:
