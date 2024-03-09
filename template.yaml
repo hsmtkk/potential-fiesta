@@ -27,6 +27,7 @@ Resources:
           CodeConfiguration:
             ConfigurationSource: REPOSITORY
             CodeConfigurationValues:
+              Runtime: NODEJS_18
               RuntimeEnvironmentSecrets:
               - Name: OPENAI_API_KEY
                 Value: !Ref Secrets
