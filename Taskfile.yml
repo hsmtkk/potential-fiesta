@@ -5,14 +5,19 @@ version: '3'
 tasks:
   default:
     cmds:
-    - task build
-    - task deploy
+    - task cloudbuild
+  cloudbuild:
+    cmds:
+    - gcloud builds submit
+  terraform:
+    dir: terraform
+    cmds:
+    - terraform fmt
+    - terraform validate
+    - terraform apply -auto-approve
   build:
     cmds:
-    - sam build --cached
-  deploy:
+    - docker build -t front .
+  run:
     cmds:
-    - sam deploy --no-confirm-changeset
-  delete:
-    cmds:
-    - aws cloudformation delete-stack --stack-name potential-fiesta
+    - docker run --env-file .env --publish 8080:8080 front

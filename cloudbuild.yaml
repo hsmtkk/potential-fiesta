@@ -1,0 +1,21 @@
+steps:
+- name: gcr.io/kaniko-project/executor:latest
+  args:
+  - --destination=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REGISTRY}/${_APPLICATION}:latest
+  - --cache=true
+  - --cache-ttl=24h
+- name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+  entrypoint: gcloud
+  args:
+  - run
+  - deploy
+  - ${_APPLICATION}
+  - --allow-unauthenticated
+  - --image
+  - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REGISTRY}/${_APPLICATION}:latest
+  - --region
+  - ${_REGION}
+substitutions:
+  _REGISTRY: registry
+  _APPLICATION: front
+  _REGION: asia-northeast1
