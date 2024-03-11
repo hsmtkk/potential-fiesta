@@ -8,6 +8,7 @@ langchain = "*"
 langchain-core = "*"
 langchain-openai = "*"
 requests = "*"
+langchainhub = "*"
 
 [dev-packages]
 
